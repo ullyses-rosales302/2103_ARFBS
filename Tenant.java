@@ -70,8 +70,8 @@ public class Tenant extends javax.swing.JInternalFrame {
         Email = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jComboUType = new javax.swing.JComboBox<>();
-        jComboUNo = new javax.swing.JComboBox<>();
+        UnitType = new javax.swing.JComboBox<>();
+        UnitNo = new javax.swing.JComboBox<>();
         AddTenant = new javax.swing.JButton();
         UpdateTenant = new javax.swing.JButton();
         DeleteTenant = new javax.swing.JButton();
@@ -156,17 +156,17 @@ public class Tenant extends javax.swing.JInternalFrame {
         jLabel8.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         jLabel8.setText("Unit No.");
 
-        jComboUType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboUType.addActionListener(new java.awt.event.ActionListener() {
+        UnitType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        UnitType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboUTypeActionPerformed(evt);
+                UnitTypeActionPerformed(evt);
             }
         });
 
-        jComboUNo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboUNo.addActionListener(new java.awt.event.ActionListener() {
+        UnitNo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        UnitNo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboUNoActionPerformed(evt);
+                UnitNoActionPerformed(evt);
             }
         });
 
@@ -252,10 +252,10 @@ public class Tenant extends javax.swing.JInternalFrame {
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel7)
-                                    .addComponent(jComboUType, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(UnitType, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(39, 39, 39)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jComboUNo, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(UnitNo, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel8)))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -325,8 +325,8 @@ public class Tenant extends javax.swing.JInternalFrame {
                             .addComponent(jLabel8))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jComboUType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboUNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(UnitType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(UnitNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addComponent(jLabel10)
                         .addGap(66, 66, 66)
@@ -496,23 +496,15 @@ private void reloadTenantData() {
     }//GEN-LAST:event_UpdateTenantActionPerformed
 
     private void DeleteTenantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteTenantActionPerformed
-        String lastName = LastName.getText().trim();
-        String firstName = FirstName.getText().trim();
-        String contactNo = ContactNo.getText().trim();
-        String email = Email.getText().trim();
         
-        if (lastName.isEmpty() || firstName.isEmpty() || contactNo.isEmpty() || email.isEmpty()) {
-        JOptionPane.showMessageDialog(null, "All fields must be filled", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
         
         if (!searchPerformed) {
                 JOptionPane.showMessageDialog(null, "Please perform a search first by selecting a Tenant ID.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-         String tenantid = TenantID.getSelectedItem().toString();  // Get the selected TenantID from the ComboBox
+         String tenantid = TenantID.getSelectedItem().toString(); 
 
-    // Check if TenantID is selected
+    
     if (tenantid == null || tenantid.isEmpty()) {
         JOptionPane.showMessageDialog(null, "Please select a valid Tenant ID", "Error", JOptionPane.ERROR_MESSAGE);
         return;
@@ -521,14 +513,14 @@ private void reloadTenantData() {
     String query = "DELETE FROM tenant WHERE TenantID = ?";
 
     try (PreparedStatement ps = connect.prepareStatement(query)) {
-        ps.setString(1, tenantid);  // Set the TenantID from the ComboBox for deletion
+        ps.setString(1, tenantid);  
 
         int rowsAffected = ps.executeUpdate();
         if (rowsAffected > 0) {
-            // Optionally, remove tenant from the ComboBox or refresh the ComboBox
+            
             TenantID.removeItem(tenantid);
 
-            // Optionally, clear the other fields after deletion
+            
             LastName.setText("");
             FirstName.setText("");
             ContactNo.setText("");
@@ -552,9 +544,9 @@ private void reloadTenantData() {
 
     }//GEN-LAST:event_DeleteTenantActionPerformed
 
-    private void jComboUNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboUNoActionPerformed
+    private void UnitNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UnitNoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboUNoActionPerformed
+    }//GEN-LAST:event_UnitNoActionPerformed
 
     private void SearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchActionPerformed
 
@@ -592,9 +584,11 @@ private void reloadTenantData() {
         // TODO add your handling code here:
     }//GEN-LAST:event_TenantIDActionPerformed
 
-    private void jComboUTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboUTypeActionPerformed
+    private void UnitTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UnitTypeActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboUTypeActionPerformed
+        
+
+    }//GEN-LAST:event_UnitTypeActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -607,9 +601,9 @@ private void reloadTenantData() {
     private javax.swing.JButton Search;
     private javax.swing.JComboBox<String> TenantID;
     private javax.swing.JTable TenantTable;
+    private javax.swing.JComboBox<String> UnitNo;
+    private javax.swing.JComboBox<String> UnitType;
     private javax.swing.JButton UpdateTenant;
-    private javax.swing.JComboBox<String> jComboUNo;
-    private javax.swing.JComboBox<String> jComboUType;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
