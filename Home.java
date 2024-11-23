@@ -265,6 +265,9 @@ public class Home extends javax.swing.JFrame {
 
         Menu4.setBackground(new java.awt.Color(204, 204, 204));
         Menu4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Menu4MouseClicked(evt);
+            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 Menu4MousePressed(evt);
             }
@@ -457,6 +460,9 @@ public class Home extends javax.swing.JFrame {
 
         Menu8.setBackground(new java.awt.Color(204, 204, 204));
         Menu8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Menu8MouseClicked(evt);
+            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 Menu8MousePressed(evt);
             }
@@ -692,6 +698,20 @@ public class Home extends javax.swing.JFrame {
         Desktop.removeAll();
         Desktop.add(menu3).setVisible(true);
     }//GEN-LAST:event_Menu3MouseClicked
+
+    private void Menu4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Menu4MouseClicked
+        // TODO add your handling code here:
+        ApartmentUnit menu4 = new ApartmentUnit();
+        Desktop.removeAll();
+        Desktop.add(menu4).setVisible(true);
+    }//GEN-LAST:event_Menu4MouseClicked
+
+    private void Menu8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Menu8MouseClicked
+        // TODO add your handling code here:
+        Reports menu8 = new Reports();
+        Desktop.removeAll();
+        Desktop.add(menu8).setVisible(true);
+    }//GEN-LAST:event_Menu8MouseClicked
 
     /**
      * @param args the command line arguments

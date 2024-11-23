@@ -105,7 +105,7 @@ public class UnitCategories extends javax.swing.JInternalFrame {
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
 
         jLabel12.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        jLabel12.setText("UNIT ID");
+        jLabel12.setText("UNIT  TYPE ID");
 
         jUnitID.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jUnitID.addActionListener(new java.awt.event.ActionListener() {
@@ -173,32 +173,33 @@ public class UnitCategories extends javax.swing.JInternalFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(57, 57, 57)
-                .addComponent(jLabel12)
-                .addGap(26, 26, 26)
-                .addComponent(jUnitID, 0, 392, Short.MAX_VALUE)
-                .addGap(42, 42, 42)
-                .addComponent(UnitSearch)
-                .addGap(307, 307, 307))
-            .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addComponent(jLabel11)
-                        .addGap(18, 18, 18)
-                        .addComponent(jTextUnitType, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(45, 45, 45)
-                        .addComponent(jLabel10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(314, 314, 314)
                         .addComponent(jbtnAdd)
                         .addGap(35, 35, 35)
                         .addComponent(jbtnUpdate)
                         .addGap(37, 37, 37)
-                        .addComponent(jbtnDelete)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jbtnDelete))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel12)
+                                .addGap(45, 45, 45)
+                                .addComponent(jUnitID, 0, 393, Short.MAX_VALUE)
+                                .addGap(44, 44, 44)
+                                .addComponent(UnitSearch)
+                                .addGap(229, 229, 229))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel11)
+                                .addGap(18, 18, 18)
+                                .addComponent(jTextUnitType, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(45, 45, 45)
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -229,7 +230,6 @@ public class UnitCategories extends javax.swing.JInternalFrame {
         jPanel2.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, -1, 30));
 
         jLabel8.setFont(new java.awt.Font("SansSerif", 1, 24)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("UNIT CATEGORY");
         jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 10, -1, -1));
 
@@ -245,7 +245,7 @@ public class UnitCategories extends javax.swing.JInternalFrame {
                 {null, null, null}
             },
             new String [] {
-                "UnitID", "UnitType", "Description"
+                "UnitTypeID", "UnitType", "Description"
             }
         ));
         jScrollPane4.setViewportView(CategoriesTable);
@@ -375,31 +375,48 @@ public class UnitCategories extends javax.swing.JInternalFrame {
 
     private void jbtnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnDeleteActionPerformed
          try {
-
+            String unit = jTextUnitType.getText();
+            String des = jTextDescription.getText();
             String unitid =  jUnitID.getSelectedItem().toString();
+
+            if (unit.isEmpty() || des.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please fill in all the required fields.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+            }
+            
             if (unitid == null || unitid.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Please select a valid Tenant ID", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
+            int confirmation = JOptionPane.showConfirmDialog(this, 
+            "Are you sure you want to delete this unit record?", 
+            "Confirm Deletion", 
+            JOptionPane.YES_NO_OPTION, 
+            JOptionPane.WARNING_MESSAGE);
+
+        if (confirmation == JOptionPane.YES_OPTION) {
             PreparedStatement pst = connect.prepareStatement("DELETE FROM unitcategories WHERE UnitID = ?");
             pst.setString(1, unitid);
 
             int k = pst.executeUpdate();
 
-                if (k == 1){
-                    JOptionPane.showMessageDialog(this,"Record has been successfully deleted");
-                    jTextUnitType.setText("");
-                    jTextDescription.setText("");
-                    jTextUnitType.requestFocus();
-                    LoadUnitNo();
-                    Fetch();
+            if (k == 1) {
+                JOptionPane.showMessageDialog(this, "Record has been successfully deleted");
 
-                } else{
-                    JOptionPane.showMessageDialog(this,"Record failed to deleted");
-                }
-                
-                jUnitID.setSelectedItem(null); 
+                jTextUnitType.setText("");
+                jTextDescription.setText("");
+                jTextUnitType.requestFocus(); 
+                LoadUnitNo();
+                Fetch();
+            } else {
+                JOptionPane.showMessageDialog(this, "Record failed to delete");
+            }
+
+            jUnitID.setSelectedItem(null);
+        } else {
+            JOptionPane.showMessageDialog(this, "Deletion canceled");
+        }
                 
         } catch (SQLException ex) {
             Logger.getLogger(UnitCategories.class.getName()).log(Level.SEVERE, null, ex);

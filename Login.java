@@ -33,10 +33,11 @@ public class Login extends javax.swing.JFrame {
         btnCreateAcc = new javax.swing.JButton();
         btnCancelLogIn = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
+        AdminChoice = new javax.swing.JRadioButton();
+        StaffChoice = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("LOGIN");
-        setPreferredSize(new java.awt.Dimension(600, 500));
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
         jPanel1.setLayout(null);
@@ -119,6 +120,24 @@ public class Login extends javax.swing.JFrame {
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/login (2).png"))); // NOI18N
 
+        AdminChoice.setBackground(new java.awt.Color(204, 204, 204));
+        AdminChoice.setText("Admin");
+        AdminChoice.setBorderPainted(true);
+        AdminChoice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AdminChoiceActionPerformed(evt);
+            }
+        });
+
+        StaffChoice.setBackground(new java.awt.Color(204, 204, 204));
+        StaffChoice.setText("User");
+        StaffChoice.setBorderPainted(true);
+        StaffChoice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                StaffChoiceActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout RightLayout = new javax.swing.GroupLayout(Right);
         Right.setLayout(RightLayout);
         RightLayout.setHorizontalGroup(
@@ -126,26 +145,29 @@ public class Login extends javax.swing.JFrame {
             .addGroup(RightLayout.createSequentialGroup()
                 .addGroup(RightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(RightLayout.createSequentialGroup()
-                        .addGap(79, 79, 79)
-                        .addComponent(btnCreateAcc))
-                    .addGroup(RightLayout.createSequentialGroup()
                         .addGap(50, 50, 50)
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel1))
                     .addGroup(RightLayout.createSequentialGroup()
+                        .addGap(81, 81, 81)
+                        .addComponent(btnCreateAcc))
+                    .addGroup(RightLayout.createSequentialGroup()
                         .addGap(25, 25, 25)
-                        .addGroup(RightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, RightLayout.createSequentialGroup()
-                                .addGap(19, 19, 19)
+                        .addGroup(RightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(RightLayout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(AdminChoice)
+                                .addGap(116, 116, 116)
+                                .addComponent(StaffChoice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(RightLayout.createSequentialGroup()
                                 .addComponent(btnLogIn, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
-                                .addComponent(btnCancelLogIn, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(19, 19, 19))
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtEmail, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtPassword, javax.swing.GroupLayout.Alignment.LEADING))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnCancelLogIn, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtPassword))))
                 .addContainerGap(112, Short.MAX_VALUE))
         );
         RightLayout.setVerticalGroup(
@@ -163,13 +185,17 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                .addGroup(RightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(AdminChoice)
+                    .addComponent(StaffChoice))
                 .addGap(18, 18, 18)
                 .addGroup(RightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnLogIn, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCancelLogIn, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnCreateAcc)
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jPanel1.add(Right);
@@ -202,15 +228,9 @@ public class Login extends javax.swing.JFrame {
     private void btnLogInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogInActionPerformed
         // TODO add your handling code here:
         String Email, Password, query = null, passDb = null;
-        /*String SUrl, SUser, SPassword;
         
-        SUrl = "jdbc:mysql://localhost/semprojdb";
-        SUser = "root";
-        SPassword = "";*/
         
         try{
-            //Class.forName("com.mysql.cj.jdbc.Driver");
-            //Connection con = DriverManager.getConnection(SUrl, SUser, SPassword);
             Statement st = connect.createStatement();
             
             if("".equals(txtEmail.getText())){
@@ -234,12 +254,24 @@ public class Login extends javax.swing.JFrame {
                     notFound = 1;
                 }
                 if(notFound == 1 && Password.equals(passDb)){
-                    //System.out.println("OKAY!");
+                    
+                    if (AdminChoice.isSelected()) {
                     Home HomeFrame = new Home();
                     HomeFrame.setVisible(true);
                     HomeFrame.pack();
                     HomeFrame.setLocationRelativeTo(null);
                     this.dispose();
+                }
+                else if (StaffChoice.isSelected()) {
+                    StaffFrame staffFrame = new StaffFrame();
+                    staffFrame.setVisible(true);
+                    staffFrame.pack();
+                    staffFrame.setLocationRelativeTo(null);
+                    this.dispose(); 
+                } else {
+                    JOptionPane.showMessageDialog(new JFrame(), "Please select a user type (Admin or Staff).", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                    
                     
             } 
                 else{
@@ -269,9 +301,15 @@ public class Login extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnCancelLogInActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+    private void AdminChoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AdminChoiceActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_AdminChoiceActionPerformed
+
+    private void StaffChoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StaffChoiceActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_StaffChoiceActionPerformed
+
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -305,8 +343,10 @@ public class Login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JRadioButton AdminChoice;
     private javax.swing.JPanel Left;
     private javax.swing.JPanel Right;
+    private javax.swing.JRadioButton StaffChoice;
     private javax.swing.JButton btnCancelLogIn;
     private javax.swing.JButton btnCreateAcc;
     private javax.swing.JButton btnLogIn;
