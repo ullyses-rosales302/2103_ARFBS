@@ -32,6 +32,7 @@ public class Home extends javax.swing.JFrame {
         Xbtn = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        Logout = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         Menu1 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
@@ -88,6 +89,16 @@ public class Home extends javax.swing.JFrame {
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/logo.png"))); // NOI18N
 
+        Logout.setBackground(new java.awt.Color(204, 204, 255));
+        Logout.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        Logout.setText("LOGOUT");
+        Logout.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(102, 102, 102), new java.awt.Color(102, 102, 102), new java.awt.Color(204, 204, 255), new java.awt.Color(204, 204, 255)));
+        Logout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LogoutActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -97,8 +108,10 @@ public class Home extends javax.swing.JFrame {
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 802, Short.MAX_VALUE)
-                .addComponent(Xbtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 771, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(Xbtn, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(Logout, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(15, 15, 15))
         );
         jPanel3Layout.setVerticalGroup(
@@ -107,14 +120,16 @@ public class Home extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(Xbtn))
+                        .addComponent(Xbtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(Logout, javax.swing.GroupLayout.DEFAULT_SIZE, 21, Short.MAX_VALUE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(25, 25, 25)
                         .addComponent(jLabel1))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(15, 15, 15)
                         .addComponent(jLabel3)))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addGap(9, 9, 9))
         );
 
         jPanel2.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1200, 80));
@@ -713,6 +728,14 @@ public class Home extends javax.swing.JFrame {
         Desktop.add(menu8).setVisible(true);
     }//GEN-LAST:event_Menu8MouseClicked
 
+    private void LogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogoutActionPerformed
+        Login LoginFrame = new Login();
+        LoginFrame.setVisible(true);
+        LoginFrame.pack();
+        LoginFrame.setLocationRelativeTo(null);
+        this.dispose();
+    }//GEN-LAST:event_LogoutActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -750,6 +773,7 @@ public class Home extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane Desktop;
+    private javax.swing.JButton Logout;
     private javax.swing.JPanel Menu1;
     private javax.swing.JPanel Menu2;
     private javax.swing.JPanel Menu3;
