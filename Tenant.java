@@ -19,10 +19,10 @@ import javax.swing.table.DefaultTableModel;
 
 public class Tenant extends javax.swing.JInternalFrame {
 
-   private Connection connect;
+    private Connection connect;
     public Tenant() {
         initComponents();
-
+        
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI)this.getUI();
         ui.setNorthPane(null);
@@ -34,6 +34,8 @@ public class Tenant extends javax.swing.JInternalFrame {
         populateTenantComboBox();
         populateUnitNoComboBox();
     }
+
+
     boolean searchPerformed = false; 
 
     private void populateTenantComboBox() {
@@ -72,8 +74,6 @@ public class Tenant extends javax.swing.JInternalFrame {
         JOptionPane.showMessageDialog(this, "Error occurred while populating Unit Types.");
     }
 }
-   
-   
    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -398,269 +398,267 @@ public class Tenant extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_EmailActionPerformed
 
+    private void jComboUnitNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboUnitNoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboUnitNoActionPerformed
+
     private void AddTenantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddTenantActionPerformed
-    try {
-        // Get tenant input data
-        String lastname = LastName.getText().trim();
-        String firstname = FirstName.getText().trim();
-        String contact = ContactNo.getText().trim();
-        String email = Email.getText().trim();
-        String unitNo = jComboUnitNo.getSelectedItem().toString();
+        try {
+            // Get tenant input data
+            String lastname = LastName.getText().trim();
+            String firstname = FirstName.getText().trim();
+            String contact = ContactNo.getText().trim();
+            String email = Email.getText().trim();
+            String unitNo = jComboUnitNo.getSelectedItem().toString();
 
-        // Validate input fields
-        if (lastname.isEmpty() || firstname.isEmpty() || contact.isEmpty() || email.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please fill in all the required fields.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // Check if the unit is available (not full or occupied)
-        ApartmentUnit apartmentUnit = new ApartmentUnit();
-        if (!apartmentUnit.isUnitAvailable(unitNo)) {
-            JOptionPane.showMessageDialog(null, "The selected unit is already full or occupied. Please choose another unit.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // Retrieve ApateuID for the selected unit
-        PreparedStatement pst = connect.prepareStatement("SELECT ApateuID FROM apartmentunit WHERE UnitNo = ?");
-        pst.setString(1, unitNo); 
-        ResultSet rs = pst.executeQuery();
-
-        if (rs.next()) {
-            String apateuID = rs.getString("ApateuID"); 
-
-            // Insert tenant information into the database
-            PreparedStatement insertpst = connect.prepareStatement(
-                "INSERT INTO tenant (LastName, FirstName, ContactInfo, Email, ApateuID, UnitNo, RegisterDate) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            insertpst.setString(1, lastname);
-            insertpst.setString(2, firstname);
-            insertpst.setString(3, contact);
-            insertpst.setString(4, email);
-            insertpst.setString(5, apateuID); 
-            insertpst.setString(6, unitNo); 
-
-            // Set registration date for tenant
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            String date = sdf.format(ChooseDate.getDate());
-            insertpst.setString(7, date);
-
-            // Execute the insertion
-            insertpst.executeUpdate();
-
-            // Update the unit status to 'Occupied' after successfully adding the tenant
-            apartmentUnit.updateUnitStatus(unitNo);
-
-            // Clear the form fields
-            LastName.setText("");
-            FirstName.setText("");
-            ContactNo.setText("");
-            Email.setText(""); 
-            jComboUnitNo.setSelectedIndex(0); 
-
-            // Inform the user of success
-            JOptionPane.showMessageDialog(null, "New tenant added successfully!");
-            
-            // Reload tenant data to reflect the changes
-            reloadTenantData();
-        } else {
-            JOptionPane.showMessageDialog(this, "Selected unit does not exist in the database.");
-        }
-    } catch (SQLException e) {
-        // Handle SQL errors
-        JOptionPane.showMessageDialog(null, "Error while adding tenant: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        System.out.println("Database error: " + e.getMessage()); 
-    } catch (Exception e) {
-        // Handle general errors
-        JOptionPane.showMessageDialog(null, "Unexpected error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        System.out.println("Unexpected error: " + e.getMessage()); 
-    }
-}
-
-private void reloadTenantData() {
-    try {
-        String selectQuery = "SELECT au.TenantID, au.LastName, au.FirstName, au.ContactInfo, au.Email, uc.ApateuID, uc.UnitNo, au.RegisterDate " +
-                             "FROM tenant au " +
-                             "JOIN apartmentunit uc ON au.ApateuID = uc.ApateuID";
-        Statement st = connect.createStatement();
-        ResultSet rs = st.executeQuery(selectQuery);
-
-        DefaultTableModel model = (DefaultTableModel) TenantTable.getModel();
-        model.setRowCount(0); 
-
-        while (rs.next()) {
-            Object[] row = new Object[]{
-                rs.getInt("TenantId"),
-                rs.getString("LastName"),
-                rs.getString("FirstName"),
-                rs.getString("ContactInfo"),
-                rs.getString("Email"),
-                rs.getString("UnitNo"),
-                rs.getString("RegisterDate")
-            };
-            model.addRow(row); 
-        }
-        
-    } catch (SQLException e) {
-        System.out.println("Error while reloading tenant data: " + e.getMessage());
-    }
-    }//GEN-LAST:event_AddTenantActionPerformed
-
-    private void UpdateTenantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateTenantActionPerformed
-if (!searchPerformed) {
-        JOptionPane.showMessageDialog(null, "Please perform a search first by selecting a Tenant ID.", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    String tenantid = TenantID.getSelectedItem().toString();  
-
-    // Validate tenant ID
-    if (tenantid == null || tenantid.isEmpty()) {
-        JOptionPane.showMessageDialog(null, "Please select a valid Tenant ID", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    String lastName = LastName.getText().trim();
-    String firstName = FirstName.getText().trim();
-    String contactNo = ContactNo.getText().trim();
-    String email = Email.getText().trim();
-    String unitno = jComboUnitNo.getSelectedItem().toString();
-
-    // Validate input fields
-    if (lastName.isEmpty() || firstName.isEmpty() || contactNo.isEmpty() || email.isEmpty()) {
-        JOptionPane.showMessageDialog(null, "All fields must be filled", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    // Check if the unit is already occupied before updating tenant info
-    try {
-        String unitStatusQuery = "SELECT UnitStatus FROM apartmentunit WHERE UnitNo = ?";
-        try (PreparedStatement psStatus = connect.prepareStatement(unitStatusQuery)) {
-            psStatus.setString(1, unitno);
-            ResultSet rsStatus = psStatus.executeQuery();
-
-            if (rsStatus.next()) {
-                String unitStatus = rsStatus.getString("UnitStatus");
-
-                if ("Occupied".equals(unitStatus)) {
-                    JOptionPane.showMessageDialog(null, "The selected unit is already occupied. Please choose another unit.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, "Unit not found in the database.", "Error", JOptionPane.ERROR_MESSAGE);
+            // Validate input fields
+            if (lastname.isEmpty() || firstname.isEmpty() || contact.isEmpty() || email.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please fill in all the required fields.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-        }
 
-        // Proceed with updating the tenant if the unit is available
-        String query = "UPDATE tenant SET LastName = ?, FirstName = ?, ContactInfo = ?, Email = ?, ApateuID = (SELECT ApateuID FROM apartmentunit WHERE UnitNo = ?), UnitNo = ? WHERE TenantID = ?";
+            // Check if the unit is available (not full or occupied)
+            ApartmentUnit apartmentUnit = new ApartmentUnit();
+            if (!apartmentUnit.isUnitAvailable(unitNo)) {
+                JOptionPane.showMessageDialog(null, "The selected unit is already full or occupied. Please choose another unit.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
-        try (PreparedStatement ps = connect.prepareStatement(query)) {
-            // Setting parameters for the query
-            ps.setString(1, lastName); 
-            ps.setString(2, firstName); 
-            ps.setString(3, contactNo); 
-            ps.setString(4, email); 
-            ps.setString(5, unitno); 
-            ps.setString(6, unitno); 
-            ps.setString(7, tenantid); 
+            // Retrieve ApateuID for the selected unit
+            PreparedStatement pst = connect.prepareStatement("SELECT ApateuID FROM apartmentunit WHERE UnitNo = ?");
+            pst.setString(1, unitNo);
+            ResultSet rs = pst.executeQuery();
 
-            // Execute the update query
-            int rowsAffected = ps.executeUpdate();
+            if (rs.next()) {
+                String apateuID = rs.getString("ApateuID");
 
-            if (rowsAffected > 0) {
-                // Call the method from apartmentunit class to update the status
-                ApartmentUnit au = new ApartmentUnit();  // Create an instance of apartmentunit class
-                au.updateUnitStatus(unitno);  // Call the updateUnitStatus method to set the unit status to "Occupied"
+                // Insert tenant information into the database
+                PreparedStatement insertpst = connect.prepareStatement(
+                    "INSERT INTO tenant (LastName, FirstName, ContactInfo, Email, ApateuID, UnitNo, RegisterDate) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                insertpst.setString(1, lastname);
+                insertpst.setString(2, firstname);
+                insertpst.setString(3, contact);
+                insertpst.setString(4, email);
+                insertpst.setString(5, apateuID);
+                insertpst.setString(6, unitNo);
 
-                JOptionPane.showMessageDialog(null, "Tenant updated successfully!");
+                // Set registration date for tenant
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                String date = sdf.format(ChooseDate.getDate());
+                insertpst.setString(7, date);
+
+                // Execute the insertion
+                insertpst.executeUpdate();
+
+                // Update the unit status to 'Occupied' after successfully adding the tenant
+                apartmentUnit.updateUnitStatus(unitNo);
 
                 // Clear the form fields
                 LastName.setText("");
                 FirstName.setText("");
                 ContactNo.setText("");
                 Email.setText("");
-                jComboUnitNo.setSelectedIndex(0); 
+                jComboUnitNo.setSelectedIndex(0);
 
-                // Reload tenant data to reflect changes
+                // Inform the user of success
+                JOptionPane.showMessageDialog(null, "New tenant added successfully!");
+
+                // Reload tenant data to reflect the changes
                 reloadTenantData();
             } else {
-                JOptionPane.showMessageDialog(null, "No tenant found with the provided ID.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Selected unit does not exist in the database.");
             }
-            
-            // Reset the tenant ID selection
-            TenantID.setSelectedIndex(0); 
-
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "An error occurred while updating the tenant: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            System.out.println("SQL Error: " + e.getMessage());
+            // Handle SQL errors
+            JOptionPane.showMessageDialog(null, "Error while adding tenant: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("Database error: " + e.getMessage());
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "An unexpected error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            System.out.println("Unexpected Error: " + e.getMessage());
+            // Handle general errors
+            JOptionPane.showMessageDialog(null, "Unexpected error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("Unexpected error: " + e.getMessage());
+        }
         }
 
-    } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, "Error while checking unit availability: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    }
+        private void reloadTenantData() {
+            try {
+                String selectQuery = "SELECT au.TenantID, au.LastName, au.FirstName, au.ContactInfo, au.Email, uc.ApateuID, uc.UnitNo, au.RegisterDate " +
+                "FROM tenant au " +
+                "JOIN apartmentunit uc ON au.ApateuID = uc.ApateuID";
+                Statement st = connect.createStatement();
+                ResultSet rs = st.executeQuery(selectQuery);
+
+                DefaultTableModel model = (DefaultTableModel) TenantTable.getModel();
+                model.setRowCount(0);
+
+                while (rs.next()) {
+                    Object[] row = new Object[]{
+                        rs.getInt("TenantId"),
+                        rs.getString("LastName"),
+                        rs.getString("FirstName"),
+                        rs.getString("ContactInfo"),
+                        rs.getString("Email"),
+                        rs.getString("UnitNo"),
+                        rs.getString("RegisterDate")
+                    };
+                    model.addRow(row);
+                }
+
+            } catch (SQLException e) {
+                System.out.println("Error while reloading tenant data: " + e.getMessage());
+            }
+    }//GEN-LAST:event_AddTenantActionPerformed
+
+    private void UpdateTenantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateTenantActionPerformed
+        if (!searchPerformed) {
+            JOptionPane.showMessageDialog(null, "Please perform a search first by selecting a Tenant ID.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String tenantid = TenantID.getSelectedItem().toString();
+
+        // Validate tenant ID
+        if (tenantid == null || tenantid.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please select a valid Tenant ID", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String lastName = LastName.getText().trim();
+        String firstName = FirstName.getText().trim();
+        String contactNo = ContactNo.getText().trim();
+        String email = Email.getText().trim();
+        String unitno = jComboUnitNo.getSelectedItem().toString();
+
+        // Validate input fields
+        if (lastName.isEmpty() || firstName.isEmpty() || contactNo.isEmpty() || email.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "All fields must be filled", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Check if the unit is already occupied before updating tenant info
+        try {
+            String unitStatusQuery = "SELECT UnitStatus FROM apartmentunit WHERE UnitNo = ?";
+            try (PreparedStatement psStatus = connect.prepareStatement(unitStatusQuery)) {
+                psStatus.setString(1, unitno);
+                ResultSet rsStatus = psStatus.executeQuery();
+
+                if (rsStatus.next()) {
+                    String unitStatus = rsStatus.getString("UnitStatus");
+
+                    if ("Occupied".equals(unitStatus)) {
+                        JOptionPane.showMessageDialog(null, "The selected unit is already occupied. Please choose another unit.", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Unit not found in the database.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+
+            // Proceed with updating the tenant if the unit is available
+            String query = "UPDATE tenant SET LastName = ?, FirstName = ?, ContactInfo = ?, Email = ?, ApateuID = (SELECT ApateuID FROM apartmentunit WHERE UnitNo = ?), UnitNo = ? WHERE TenantID = ?";
+
+            try (PreparedStatement ps = connect.prepareStatement(query)) {
+                // Setting parameters for the query
+                ps.setString(1, lastName);
+                ps.setString(2, firstName);
+                ps.setString(3, contactNo);
+                ps.setString(4, email);
+                ps.setString(5, unitno);
+                ps.setString(6, unitno);
+                ps.setString(7, tenantid);
+
+                // Execute the update query
+                int rowsAffected = ps.executeUpdate();
+
+                if (rowsAffected > 0) {
+                    // Call the method from apartmentunit class to update the status
+                    ApartmentUnit au = new ApartmentUnit();  // Create an instance of apartmentunit class
+                    au.updateUnitStatus(unitno);  // Call the updateUnitStatus method to set the unit status to "Occupied"
+
+                    JOptionPane.showMessageDialog(null, "Tenant updated successfully!");
+
+                    // Clear the form fields
+                    LastName.setText("");
+                    FirstName.setText("");
+                    ContactNo.setText("");
+                    Email.setText("");
+                    jComboUnitNo.setSelectedIndex(0);
+
+                    // Reload tenant data to reflect changes
+                    reloadTenantData();
+                } else {
+                    JOptionPane.showMessageDialog(null, "No tenant found with the provided ID.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+
+                // Reset the tenant ID selection
+                TenantID.setSelectedIndex(0);
+
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "An error occurred while updating the tenant: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                System.out.println("SQL Error: " + e.getMessage());
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "An unexpected error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                System.out.println("Unexpected Error: " + e.getMessage());
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error while checking unit availability: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_UpdateTenantActionPerformed
 
     private void DeleteTenantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteTenantActionPerformed
- 
+
         if (!searchPerformed) {
-                JOptionPane.showMessageDialog(null, "Please perform a search first by selecting a Tenant ID.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-         String tenantid = TenantID.getSelectedItem().toString(); 
+            JOptionPane.showMessageDialog(null, "Please perform a search first by selecting a Tenant ID.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        String tenantid = TenantID.getSelectedItem().toString();
 
         if (tenantid == null || tenantid.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Please select a valid Tenant ID", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-    String query = "DELETE FROM tenant WHERE TenantID = ?";
+        String query = "DELETE FROM tenant WHERE TenantID = ?";
 
-    try (PreparedStatement ps = connect.prepareStatement(query)) {
-        ps.setString(1, tenantid);  
+        try (PreparedStatement ps = connect.prepareStatement(query)) {
+            ps.setString(1, tenantid);
 
-        int rowsAffected = ps.executeUpdate();
-        if (rowsAffected > 0) {
-            
-            TenantID.removeItem(tenantid);
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
 
-            
-            LastName.setText("");
-            FirstName.setText("");
-            ContactNo.setText("");
-            Email.setText("");
+                TenantID.removeItem(tenantid);
 
-            JOptionPane.showMessageDialog(null, "Tenant deleted successfully!");
-            reloadTenantData();
-            
-        } else {
-            JOptionPane.showMessageDialog(null, "No tenant found with the provided ID.", "Error", JOptionPane.ERROR_MESSAGE);
+                LastName.setText("");
+                FirstName.setText("");
+                ContactNo.setText("");
+                Email.setText("");
+
+                JOptionPane.showMessageDialog(null, "Tenant deleted successfully!");
+                reloadTenantData();
+
+            } else {
+                JOptionPane.showMessageDialog(null, "No tenant found with the provided ID.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            TenantID.setSelectedItem(null);
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "An error occurred while deleting the tenant: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("SQL Error: " + e.getMessage());
         }
-        TenantID.setSelectedItem(null); 
-
-    } catch (SQLException e) {
-        JOptionPane.showMessageDialog(null, "An error occurred while deleting the tenant: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        System.out.println("SQL Error: " + e.getMessage());
-    } 
-
     }//GEN-LAST:event_DeleteTenantActionPerformed
-
-    private void jComboUnitNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboUnitNoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboUnitNoActionPerformed
 
     private void SearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchActionPerformed
         String tenantid =  TenantID.getSelectedItem().toString();
-            if (tenantid == null || tenantid.isEmpty()) {
+        if (tenantid == null || tenantid.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please select a valid Tenant ID");
             return;
         }
 
         try {
-            
-        searchPerformed = true;
-        UpdateTenant.setEnabled(true);
+
+            searchPerformed = true;
+            UpdateTenant.setEnabled(true);
 
             PreparedStatement pst = connect.prepareStatement("SELECT * FROM tenant WHERE TenantID = ?");
             pst.setString(1, tenantid);
@@ -672,10 +670,9 @@ if (!searchPerformed) {
                 ContactNo.setText(rs.getString("ContactInfo"));
                 Email.setText(rs.getString("Email"));
                 String unitno = (rs.getString("UnitNo"));
-                jComboUnitNo.setSelectedItem(unitno); 
-               
-                
-            String registerDate = rs.getString("RegisterDate"); // Assuming the date is stored as a string in the 'yyyy-MM-dd' format
+                jComboUnitNo.setSelectedItem(unitno);
+
+                String registerDate = rs.getString("RegisterDate"); // Assuming the date is stored as a string in the 'yyyy-MM-dd' format
                 if (registerDate != null && !registerDate.isEmpty()) {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     Date date = sdf.parse(registerDate);
@@ -686,7 +683,7 @@ if (!searchPerformed) {
                 }
             }else{
                 JOptionPane.showMessageDialog(this, "No record found for the selected unit ID", "Error", JOptionPane.ERROR_MESSAGE);
-            
+
                 LastName.setText("");
                 FirstName.setText("");
                 ContactNo.setText("");
@@ -695,13 +692,12 @@ if (!searchPerformed) {
                 ChooseDate.setDate(null);
 
             }
-            
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(Tenant.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex) {
-           Logger.getLogger(Tenant.class.getName()).log(Level.SEVERE, null, ex);
-       }
+            Logger.getLogger(Tenant.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_SearchActionPerformed
 
     private void TenantIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TenantIDActionPerformed
@@ -713,8 +709,8 @@ if (!searchPerformed) {
         LastName.setText("");
         FirstName.setText("");
         ContactNo.setText("");
-        Email.setText(""); 
-        TenantID.setSelectedIndex(0); 
+        Email.setText("");
+        TenantID.setSelectedIndex(0);
 
         reloadTenantData();
         populateTenantComboBox();

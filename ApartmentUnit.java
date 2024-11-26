@@ -127,7 +127,6 @@ public class ApartmentUnit extends javax.swing.JInternalFrame {
     }
 
 public void updateUnitStatus(String unitNo) throws SQLException {
-    // Query to count the number of tenants in the given unit
     String countQuery = "SELECT COUNT(*) AS tenantCount FROM tenant WHERE UnitNo = ?";
     try (PreparedStatement pst = connect.prepareStatement(countQuery)) {
         pst.setString(1, unitNo);
@@ -137,7 +136,6 @@ public void updateUnitStatus(String unitNo) throws SQLException {
             int tenantCount = rs.getInt("tenantCount");
             JOptionPane.showMessageDialog(null, "Tenant Count for unit " + unitNo + ": " + tenantCount);
 
-            // Query to get the current unit status
             String statusQuery = "SELECT UnitStatus FROM apartmentunit WHERE UnitNo = ?";
             try (PreparedStatement statusStmt = connect.prepareStatement(statusQuery)) {
                 statusStmt.setString(1, unitNo);
@@ -147,7 +145,6 @@ public void updateUnitStatus(String unitNo) throws SQLException {
                     String unitStatus = rsStatus.getString("UnitStatus");
                     JOptionPane.showMessageDialog(null, "Unit Status before update: " + unitStatus);
 
-                    // If tenant count > 0 and unit is 'Available', update to 'Occupied'
                     if (tenantCount > 0 && unitStatus != null && unitStatus.equals("Available")) {
                         String updateStatusQuery = "UPDATE apartmentunit SET UnitStatus = 'Occupied' WHERE UnitNo = ?";
                         try (PreparedStatement updateStmt = connect.prepareStatement(updateStatusQuery)) {
@@ -159,11 +156,10 @@ public void updateUnitStatus(String unitNo) throws SQLException {
                                 JOptionPane.showMessageDialog(null, "Error updating unit status.");
                             }
                         }
-                        // Reload the table data to reflect the changes
                         reloadUnitData();
-                        UnitTable.repaint(); // Ensure the table is refreshed
+                        UnitTable.repaint(); 
                     }
-                    // If tenant count == 0 and unit is 'Occupied', update to 'Available'
+
                     else if (tenantCount == 0 && unitStatus != null && unitStatus.equals("Occupied")) {
                         String updateStatusQuery = "UPDATE apartmentunit SET UnitStatus = 'Available' WHERE UnitNo = ?";
                         try (PreparedStatement updateStmt = connect.prepareStatement(updateStatusQuery)) {
@@ -175,9 +171,9 @@ public void updateUnitStatus(String unitNo) throws SQLException {
                                 JOptionPane.showMessageDialog(null, "Error updating unit status.");
                             }
                         }
-                        // Reload the table data to reflect the changes
+
                         reloadUnitData();
-                        UnitTable.repaint(); // Ensure the table is refreshed
+                        UnitTable.repaint();
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "Unit not found in apartmentunit table.");
