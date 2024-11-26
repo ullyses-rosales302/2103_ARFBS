@@ -1,440 +1,583 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
-package unitcategory;
 
-import Connector.MyConnection;
+package UI;
+
+import MyConnection.MyConnection;
 import java.sql.Connection;
-import java.sql.*;
-import java.util.logging.*;
 import javax.swing.JOptionPane;
-import java.util.Date;
-/**
- *
- * @author USER
- */
-public class Payment extends javax.swing.JFrame {
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.text.SimpleDateFormat;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.plaf.basic.BasicInternalFrameUI;
+import javax.swing.table.DefaultTableModel;
+
+
+public class Payment extends javax.swing.JInternalFrame {
 
     private Connection connect;
     public Payment() {
         initComponents();
-         MyConnection conn = new MyConnection();
-         connect = conn.getConnection();
-         LoadPaymentNo();
+        
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
+        BasicInternalFrameUI ui = (BasicInternalFrameUI)this.getUI();
+        ui.setNorthPane(null);
+        
+        MyConnection conn = new MyConnection();
+        connect = conn.getConnection();
+        
+        LoadTenantNo();
+        PaymentTable();
     }
-
-    public void LoadPaymentNo(){
+    
+    public void LoadTenantNo(){
         
         try {
             
-           PreparedStatement pst = connect.prepareStatement("SELECT PaymentID FROM payment");
+           PreparedStatement pst = connect.prepareStatement("SELECT BillingID FROM billing");
             ResultSet rs = pst.executeQuery();
-            jtxtpid.removeAllItems();
+            BillID.removeAllItems();
             while(rs.next()){
-                jtxtpid.addItem(rs.getString(1));
+                BillID.addItem(rs.getString(1));
                 
             }
         } catch (SQLException ex) {
-            Logger.getLogger(bill.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Payment.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void print() {
-    	    String payid =  jtxtpid.getSelectedItem().toString();
-            String lname = jtxtln.getText();
-	    String fname = jtxtfn.getText();
-	    String unit = jtxtunit.getText();
-	    String rate = jtxtmrate.getText();
-	    String rep = jtxtreceipt.getText();
-	    String tbill = jtxtbill.getText();
-            Date dt = new Date();
-            String date = dt.toString();
+
+    private void PaymentTable() {
+    try {
+        PreparedStatement pst = connect.prepareStatement("SELECT * FROM payment");
+        ResultSet rs = pst.executeQuery();
+        ResultSetMetaData rss = rs.getMetaData();
+        int q = rss.getColumnCount();
+
+        DefaultTableModel df = (DefaultTableModel) pTable.getModel();
+        df.setRowCount(0);
+
+        while (rs.next()) {
+            Vector v2 = new Vector();
+            v2.add(rs.getString("PaymentID"));
+            v2.add(rs.getString("BillingID"));
+            v2.add(rs.getString("LastName"));
+            v2.add(rs.getString("FirstName"));
+            v2.add(rs.getString("DateRegistered"));
+            v2.add(rs.getString("TotalRentBill"));
+            v2.add(rs.getString("AmountPaid"));
+            v2.add(rs.getString("Sukli"));
+            v2.add(rs.getString("PaymentDate"));
+            v2.add(rs.getString("ReceiptNo"));
             
-            
-        if (payid.isEmpty() || lname.isEmpty() || fname.isEmpty() || unit.isEmpty() || 
-            rate.isEmpty() || rep.isEmpty() || tbill.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "All fields must be filled out!", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
+
+            df.addRow(v2);
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(Payment.class.getName()).log(Level.SEVERE, null, ex);
     }
-    jTextArea1.append("\n");
-    jTextArea1.append("======================================"); 
-    jTextArea1.append("\n");
-    jTextArea1.append("\t    Utilities Billing\n");
-    jTextArea1.append("======================================"); 
-    jTextArea1.append("\n");
-    jTextArea1.append("\n" + date + "\n \n");
-    jTextArea1.append("\n");
-    jTextArea1.append("Payment ID: " + payid + "\n");
-    jTextArea1.append("\n");
-    jTextArea1.append("Tenant Name: " + fname + " " + lname + "\n");
-    jTextArea1.append("\n");
-    jTextArea1.append("Unit ID: " + unit + "\n");
-    jTextArea1.append("\n");
-    jTextArea1.append("Monthly Rate: " + rate + "\n");
-    jTextArea1.append("\n");
-    jTextArea1.append("Receipt No.: " + rep + "\n");
-    jTextArea1.append("\n");
-    jTextArea1.append("Total bill Amount: " + tbill + "\n");
-    jTextArea1.append("\n");
-    jTextArea1.append("\n");
-    jTextArea1.append("   THANK YOU!!!\n");
 }
     @SuppressWarnings("unchecked")
-    
-  
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jDesktopPane1 = new javax.swing.JDesktopPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jGenrep = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        jtxtreceipt = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
+        pTable = new javax.swing.JTable();
+        DateRegistered = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        TotalRent = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        Search = new javax.swing.JButton();
+        BillID = new javax.swing.JComboBox<>();
+        jSeparator2 = new javax.swing.JSeparator();
+        jLabel3 = new javax.swing.JLabel();
+        LastName = new javax.swing.JTextField();
+        FirstName = new javax.swing.JTextField();
+        Receiptbtn = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jtxtln = new javax.swing.JTextField();
-        jtxtbill = new javax.swing.JTextField();
-        jtxtfn = new javax.swing.JTextField();
-        jtxtunit = new javax.swing.JTextField();
-        jtxtmrate = new javax.swing.JTextField();
-        jtxtpid = new javax.swing.JComboBox<>();
-        jbtnsearch = new javax.swing.JButton();
+        Amount = new javax.swing.JTextField();
+        btnSave = new javax.swing.JButton();
+        PaymentDate = new com.toedter.calendar.JDateChooser();
+        change = new javax.swing.JLabel();
+        jtxtchange = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jPanel1.setBackground(new java.awt.Color(204, 204, 255));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jDesktopPane1.setBackground(new java.awt.Color(204, 204, 255));
-        jDesktopPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jLabel1.setFont(new java.awt.Font("SansSerif", 1, 24)); // NOI18N
+        jLabel1.setText("PAYMENT");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 2, 400, 40));
 
-        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
-        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel2.setBackground(new java.awt.Color(204, 204, 204));
 
-        jLabel1.setFont(new java.awt.Font("SansSerif", 1, 48)); // NOI18N
-        jLabel1.setText("P A Y M E N T  R E C E I P T");
+        pTable.setBackground(new java.awt.Color(204, 204, 255));
+        pTable.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)), null));
+        pTable.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
+        pTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(165, 165, 165))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(17, Short.MAX_VALUE))
-        );
+            },
+            new String [] {
+                "PaymentID", "BillingID", "LastName", "FirstName", "DateRegistered", "TotalBill", "AmountPaid", "Change", "PaymentDate", "Receipt No"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, true, true, true, true, true, true
+            };
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
-        jTextArea1.setRows(5);
-        jTextArea1.setMinimumSize(new java.awt.Dimension(13, 30));
-        jScrollPane1.setViewportView(jTextArea1);
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(pTable);
 
-        jGenrep.setBackground(new java.awt.Color(204, 204, 255));
-        jGenrep.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
-        jGenrep.setText("Generate Receipt");
-        jGenrep.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jGenrep.addActionListener(new java.awt.event.ActionListener() {
+        DateRegistered.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jGenrepActionPerformed(evt);
+                DateRegisteredActionPerformed(evt);
             }
         });
 
-        jLabel2.setFont(new java.awt.Font("SansSerif", 3, 24)); // NOI18N
-        jLabel2.setText("Receipt No.");
+        jLabel4.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        jLabel4.setText("Date Registered");
 
-        jtxtreceipt.setBackground(new java.awt.Color(204, 204, 255));
-        jtxtreceipt.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        jLabel5.setText("Total Rent Bill");
 
-        jLabel3.setFont(new java.awt.Font("SansSerif", 1, 20)); // NOI18N
-        jLabel3.setText("Payment ID ");
-
-        jLabel4.setFont(new java.awt.Font("SansSerif", 1, 20)); // NOI18N
-        jLabel4.setText("Last Name ");
-
-        jLabel5.setFont(new java.awt.Font("SansSerif", 1, 20)); // NOI18N
-        jLabel5.setText("First Name");
-
-        jLabel6.setFont(new java.awt.Font("SansSerif", 1, 20)); // NOI18N
-        jLabel6.setText("Unit ID ");
-
-        jLabel7.setFont(new java.awt.Font("SansSerif", 1, 20)); // NOI18N
-        jLabel7.setText("Monthly Rate ");
-
-        jLabel8.setFont(new java.awt.Font("SansSerif", 1, 20)); // NOI18N
-        jLabel8.setText("Total Bill ");
-
-        jtxtln.setBackground(new java.awt.Color(204, 204, 255));
-        jtxtln.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-
-        jtxtbill.setBackground(new java.awt.Color(204, 204, 255));
-        jtxtbill.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-
-        jtxtfn.setBackground(new java.awt.Color(204, 204, 255));
-        jtxtfn.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-
-        jtxtunit.setBackground(new java.awt.Color(204, 204, 255));
-        jtxtunit.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-
-        jtxtmrate.setBackground(new java.awt.Color(204, 204, 255));
-        jtxtmrate.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-
-        jtxtpid.setBackground(new java.awt.Color(204, 204, 204));
-        jtxtpid.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
-        jtxtpid.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jbtnsearch.setBackground(new java.awt.Color(204, 204, 255));
-        jbtnsearch.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        jbtnsearch.setText("Search");
-        jbtnsearch.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jbtnsearch.addActionListener(new java.awt.event.ActionListener() {
+        TotalRent.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbtnsearchActionPerformed(evt);
+                TotalRentActionPerformed(evt);
             }
         });
 
-        jDesktopPane1.setLayer(jPanel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(jGenrep, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(jtxtreceipt, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(jLabel4, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(jLabel5, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(jLabel6, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(jLabel7, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(jLabel8, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(jtxtln, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(jtxtbill, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(jtxtfn, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(jtxtunit, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(jtxtmrate, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(jtxtpid, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(jbtnsearch, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLabel9.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        jLabel9.setText("Billing ID");
 
-        javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
-        jDesktopPane1.setLayout(jDesktopPane1Layout);
-        jDesktopPane1Layout.setHorizontalGroup(
-            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                        .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                                .addGap(31, 31, 31)
-                                .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel6)
-                                    .addComponent(jLabel4)))
-                            .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                                .addGap(23, 23, 23)
-                                .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                                        .addGap(6, 6, 6)
-                                        .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel3)
-                                            .addComponent(jtxtreceipt, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGap(135, 135, 135))
-                    .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                        .addContainerGap(18, Short.MAX_VALUE)
-                        .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
-                            .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addComponent(jLabel8)))
-                        .addGap(353, 353, 353))
-                    .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jtxtln, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jtxtfn, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jtxtunit, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jtxtmrate, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jtxtbill, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                                .addComponent(jtxtpid, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(33, 33, 33)
-                                .addComponent(jbtnsearch, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 447, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDesktopPane1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jGenrep, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(137, 137, 137))
-        );
-        jDesktopPane1Layout.setVerticalGroup(
-            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jtxtreceipt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel3)
-                        .addGap(12, 12, 12)
-                        .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jtxtpid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jbtnsearch, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(9, 9, 9)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jtxtln, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(5, 5, 5)
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jtxtfn, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jtxtunit, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)
+        jLabel10.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        jLabel10.setText("Payment Date");
+
+        jSeparator1.setForeground(new java.awt.Color(0, 0, 0));
+
+        Search.setBackground(new java.awt.Color(102, 102, 102));
+        Search.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        Search.setForeground(new java.awt.Color(204, 204, 204));
+        Search.setText("Search");
+        Search.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(51, 51, 51), new java.awt.Color(255, 255, 204)));
+        Search.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SearchActionPerformed(evt);
+            }
+        });
+
+        BillID.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        BillID.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BillIDActionPerformed(evt);
+            }
+        });
+
+        jSeparator2.setBackground(new java.awt.Color(204, 204, 255));
+        jSeparator2.setForeground(new java.awt.Color(0, 0, 0));
+
+        jLabel3.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        jLabel3.setText("Tenant Name");
+
+        LastName.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        LastName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LastNameActionPerformed(evt);
+            }
+        });
+
+        FirstName.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        FirstName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FirstNameActionPerformed(evt);
+            }
+        });
+
+        Receiptbtn.setBackground(new java.awt.Color(204, 204, 255));
+        Receiptbtn.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        Receiptbtn.setText("Show Receipt");
+        Receiptbtn.setBorder(null);
+        Receiptbtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ReceiptbtnActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(102, 102, 255));
+        jLabel7.setText("Time for Payment!");
+
+        jLabel8.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        jLabel8.setText("Amount Paid");
+
+        Amount.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AmountActionPerformed(evt);
+            }
+        });
+
+        btnSave.setBackground(new java.awt.Color(204, 204, 255));
+        btnSave.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnSave.setText("Save");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
+
+        change.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        change.setText("Change");
+
+        jtxtchange.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jtxtchangeActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 645, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(18, 18, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(Search, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(change, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                            .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(Receiptbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                            .addComponent(jLabel9)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                            .addComponent(BillID, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                            .addComponent(LastName, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                            .addComponent(FirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(DateRegistered, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(TotalRent, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(Amount, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(PaymentDate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jtxtchange, javax.swing.GroupLayout.Alignment.LEADING))
+                                    .addContainerGap()))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(58, 58, 58)
                         .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jtxtmrate, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 940, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 573, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel9)
+                            .addComponent(BillID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(Search)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(LastName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(FirstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(DateRegistered, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(TotalRent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(Amount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jtxtbill, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(18, 18, 18)
-                .addComponent(jGenrep, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(96, 96, 96))
+                        .addComponent(change)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jtxtchange, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel10)
+                        .addGap(8, 8, 8)
+                        .addComponent(PaymentDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(Receiptbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 940, 620));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jDesktopPane1)
-                .addContainerGap())
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jDesktopPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jGenrepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jGenrepActionPerformed
-       
-        print();
+    private void DateRegisteredActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DateRegisteredActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_DateRegisteredActionPerformed
 
-    }//GEN-LAST:event_jGenrepActionPerformed
+    private void TotalRentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TotalRentActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TotalRentActionPerformed
 
-    private void jbtnsearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnsearchActionPerformed
+    private void SearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchActionPerformed
         try {
-            String payid =  jtxtpid.getSelectedItem().toString();
-            String lname = jtxtln.getText();
-	    String fname = jtxtfn.getText();
-	    String unit = jtxtunit.getText();
-	    String rate = jtxtmrate.getText();
-	    String rep = jtxtreceipt.getText();
-	    String tbill = jtxtbill.getText();
-		
-            PreparedStatement pst = connect.prepareStatement("SELECT * FROM payment WHERE PaymentID = ?");
-            pst.setString(1, payid);
+            String billid = BillID.getSelectedItem().toString().trim();
+
+            if (billid.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please select a Billing ID from the dropdown.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            PreparedStatement pst = connect.prepareStatement("SELECT * FROM billing WHERE billingID = ?");
+            pst.setString(1, billid);
             ResultSet rs = pst.executeQuery();
 
-            if (rs.next() == true){
-                jtxtln.setText(rs.getString(2));
-                jtxtfn.setText(rs.getString(3));
-                jtxtunit.setText(rs.getString(4));
-		jtxtmrate.setText(rs.getString(5));
-		jtxtreceipt.setText(rs.getString(6));
-		jtxtbill.setText(rs.getString(7));
-            }
-            else{
-                   JOptionPane.showMessageDialog(this,"No record found");
+            if (rs.next()) {
+                String foundLastName = rs.getString("LastName");
+                String foundFirstName = rs.getString("FirstName");
+                double totalBill = rs.getDouble("TotalBill");
+                String registerDate = rs.getString("DateRegistered");
+
+                LastName.setText(foundLastName);
+                FirstName.setText(foundFirstName);
+                TotalRent.setText(String.valueOf(totalBill));
+                DateRegistered.setText(registerDate);
                 
             }
+          
+            else {
+                JOptionPane.showMessageDialog(this, "No record found for the selected Tenant ID.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         } catch (SQLException ex) {
-            Logger.getLogger(Payment.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Database error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_jbtnsearchActionPerformed
+    }//GEN-LAST:event_SearchActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Payment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Payment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Payment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Payment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void BillIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BillIDActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_BillIDActionPerformed
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Payment().setVisible(true);
-            }
-        });
+    private void LastNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LastNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_LastNameActionPerformed
+
+    private void FirstNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FirstNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_FirstNameActionPerformed
+
+    private void ReceiptbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ReceiptbtnActionPerformed
+        Receipt pay = new Receipt();
+        pay.setVisible(true);
+        pay.pack();
+        pay.setLocationRelativeTo(null);
+        this.dispose();
+    }//GEN-LAST:event_ReceiptbtnActionPerformed
+
+    private void AmountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AmountActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_AmountActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        
+    try {
+    String billid = BillID.getSelectedItem().toString().trim();
+    String dateRegistered = DateRegistered.getText().trim();
+    String totalRent = TotalRent.getText().trim();
+    String amountPaidString = Amount.getText().trim();
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    String date = (PaymentDate.getDate() != null) ? sdf.format(PaymentDate.getDate()) : null;
+
+    if (date == null) {
+        JOptionPane.showMessageDialog(this, "Please select a payment date.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
     }
 
+    if (billid.isEmpty() || dateRegistered.isEmpty() || totalRent.isEmpty() || amountPaidString.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please fill in all the required fields.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    double totalBill = Double.parseDouble(totalRent);
+    double amountPaid = Double.parseDouble(amountPaidString);
+    double change = 0;
+
+    if (amountPaid < totalBill) {
+        JOptionPane.showMessageDialog(this, "The Amount Paid is less than the Total Bill. Please enter a new Amount Paid.", "Warning", JOptionPane.WARNING_MESSAGE);
+        Amount.requestFocus();
+        return;
+    }
+
+    if (amountPaid > totalBill) {
+        change = amountPaid - totalBill;
+        jtxtchange.setText(String.format("%.2f", change)); 
+    } else {
+        jtxtchange.setText("0.00");
+    }
+
+    // Step 1: Retrieve tenant's first and last name based on BillingID
+    String tenantFirstName = "";
+    String tenantLastName = "";
+    String tenantQuery = "SELECT b.TenantID, t.LastName, t.FirstName " +
+                         "FROM billing b " +
+                         "JOIN tenant t ON b.TenantID = t.TenantID " +
+                         "WHERE b.BillingID = ?";
+
+    PreparedStatement pstTenant = connect.prepareStatement(tenantQuery);
+    pstTenant.setString(1, billid);
+    ResultSet rsTenant = pstTenant.executeQuery();
+
+    if (rsTenant.next()) {
+        tenantFirstName = rsTenant.getString("FirstName");
+        tenantLastName = rsTenant.getString("LastName");
+    } else {
+        JOptionPane.showMessageDialog(this, "No tenant found for the selected BillingID.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+   
+    String receiptNo = "R-001"; 
+    String latestReceiptNoQuery = "SELECT ReceiptNo FROM payment ORDER BY PaymentID DESC LIMIT 1";
+    PreparedStatement pstReceipt = connect.prepareStatement(latestReceiptNoQuery);
+    ResultSet rsReceipt = pstReceipt.executeQuery();
+
+    if (rsReceipt.next()) {
+        String latestReceiptNo = rsReceipt.getString("ReceiptNo");
+        int latestNo = Integer.parseInt(latestReceiptNo.substring(2)); 
+        receiptNo = String.format("R-%03d", latestNo + 1); 
+    }
+    rsReceipt.close();
+    pstReceipt.close();
+
+    // Step 3: Insert payment details along with tenant's first and last name
+    String sql = "INSERT INTO payment (BillingID, LastName, FirstName, DateRegistered, TotalRentBill, AmountPaid, Sukli, PaymentDate, ReceiptNo) " +
+                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    PreparedStatement pstPayment = connect.prepareStatement(sql);
+    pstPayment.setString(1, billid);
+    pstPayment.setString(2, tenantLastName);
+    pstPayment.setString(3, tenantFirstName);
+    pstPayment.setString(4, dateRegistered);
+    pstPayment.setDouble(5, totalBill);
+    pstPayment.setDouble(6, amountPaid);
+    pstPayment.setDouble(7, change);
+    pstPayment.setString(8, date);
+    pstPayment.setString(9, receiptNo);
+
+    int k = pstPayment.executeUpdate();
+
+    if (k == 1) {
+        JOptionPane.showMessageDialog(this, "Payment has been done and saved successfully!");
+
+        // Clear the fields
+        BillID.setSelectedIndex(0);
+        DateRegistered.setText("");
+        TotalRent.setText("");
+      
+        Amount.setText("");
+        jtxtchange.setText("");
+        PaymentDate.setDate(null);
+
+        PaymentTable(); // Assuming this updates the table view
+    } else {
+        JOptionPane.showMessageDialog(this, "Save failed.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    // Close resources
+    rsTenant.close();
+    pstTenant.close();
+    pstPayment.close();
+
+} catch (NumberFormatException ex) {
+    JOptionPane.showMessageDialog(this, "Invalid numeric value: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+} catch (SQLException ex) {
+    JOptionPane.showMessageDialog(this, "Database error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+}
+ 
+       
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void jtxtchangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtxtchangeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtxtchangeActionPerformed
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JDesktopPane jDesktopPane1;
-    private javax.swing.JButton jGenrep;
+    private javax.swing.JTextField Amount;
+    private javax.swing.JComboBox<String> BillID;
+    private javax.swing.JTextField DateRegistered;
+    private javax.swing.JTextField FirstName;
+    private javax.swing.JTextField LastName;
+    private com.toedter.calendar.JDateChooser PaymentDate;
+    private javax.swing.JButton Receiptbtn;
+    private javax.swing.JButton Search;
+    private javax.swing.JTextField TotalRent;
+    private javax.swing.JButton btnSave;
+    private javax.swing.JLabel change;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JButton jbtnsearch;
-    private javax.swing.JTextField jtxtbill;
-    private javax.swing.JTextField jtxtfn;
-    private javax.swing.JTextField jtxtln;
-    private javax.swing.JTextField jtxtmrate;
-    private javax.swing.JComboBox<String> jtxtpid;
-    private javax.swing.JTextField jtxtreceipt;
-    private javax.swing.JTextField jtxtunit;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JTextField jtxtchange;
+    private javax.swing.JTable pTable;
     // End of variables declaration//GEN-END:variables
-
-   
 }
