@@ -1,17 +1,18 @@
 
 package UI;
+
 import java.sql.*;
 import MyConnection.MyConnection;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
 
-
 public class Login extends javax.swing.JFrame {
 
     private Connection connect;
     public Login() {
         initComponents();
+        
         MyConnection conn = new MyConnection();
         connect = conn.getConnection();
     }
@@ -29,15 +30,14 @@ public class Login extends javax.swing.JFrame {
         txtEmail = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         txtPassword = new javax.swing.JPasswordField();
-        btnLogIn = new javax.swing.JButton();
         btnCreateAcc = new javax.swing.JButton();
-        btnCancelLogIn = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         AdminChoice = new javax.swing.JRadioButton();
         StaffChoice = new javax.swing.JRadioButton();
+        Login = new javax.swing.JButton();
+        btnCancelLogIn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("LOGIN");
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
         jPanel1.setLayout(null);
@@ -85,17 +85,6 @@ public class Login extends javax.swing.JFrame {
 
         txtPassword.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 51, 51)));
 
-        btnLogIn.setBackground(new java.awt.Color(102, 102, 102));
-        btnLogIn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnLogIn.setForeground(new java.awt.Color(255, 255, 255));
-        btnLogIn.setText("Login");
-        btnLogIn.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(51, 51, 51), new java.awt.Color(255, 255, 204)));
-        btnLogIn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLogInActionPerformed(evt);
-            }
-        });
-
         btnCreateAcc.setBackground(new java.awt.Color(102, 102, 102));
         btnCreateAcc.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnCreateAcc.setForeground(new java.awt.Color(255, 255, 204));
@@ -104,17 +93,6 @@ public class Login extends javax.swing.JFrame {
         btnCreateAcc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCreateAccActionPerformed(evt);
-            }
-        });
-
-        btnCancelLogIn.setBackground(new java.awt.Color(102, 102, 102));
-        btnCancelLogIn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnCancelLogIn.setForeground(new java.awt.Color(255, 255, 255));
-        btnCancelLogIn.setText("Cancel");
-        btnCancelLogIn.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(51, 51, 51), new java.awt.Color(255, 255, 204)));
-        btnCancelLogIn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelLogInActionPerformed(evt);
             }
         });
 
@@ -138,6 +116,28 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
+        Login.setBackground(new java.awt.Color(102, 102, 102));
+        Login.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        Login.setForeground(new java.awt.Color(255, 255, 255));
+        Login.setText("Login");
+        Login.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(51, 51, 51), new java.awt.Color(255, 255, 204)));
+        Login.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LoginActionPerformed(evt);
+            }
+        });
+
+        btnCancelLogIn.setBackground(new java.awt.Color(102, 102, 102));
+        btnCancelLogIn.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnCancelLogIn.setForeground(new java.awt.Color(255, 255, 255));
+        btnCancelLogIn.setText("Cancel");
+        btnCancelLogIn.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(51, 51, 51), new java.awt.Color(255, 255, 204)));
+        btnCancelLogIn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelLogInActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout RightLayout = new javax.swing.GroupLayout(Right);
         Right.setLayout(RightLayout);
         RightLayout.setHorizontalGroup(
@@ -155,19 +155,21 @@ public class Login extends javax.swing.JFrame {
                     .addGroup(RightLayout.createSequentialGroup()
                         .addGap(25, 25, 25)
                         .addGroup(RightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(RightLayout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(AdminChoice)
-                                .addGap(116, 116, 116)
-                                .addComponent(StaffChoice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(RightLayout.createSequentialGroup()
-                                .addComponent(btnLogIn, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnCancelLogIn, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtPassword))))
+                            .addComponent(txtPassword)
+                            .addGroup(RightLayout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addGroup(RightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(RightLayout.createSequentialGroup()
+                                        .addComponent(Login, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnCancelLogIn, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(RightLayout.createSequentialGroup()
+                                        .addComponent(AdminChoice)
+                                        .addGap(116, 116, 116)
+                                        .addComponent(StaffChoice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))))
                 .addContainerGap(112, Short.MAX_VALUE))
         );
         RightLayout.setVerticalGroup(
@@ -191,9 +193,9 @@ public class Login extends javax.swing.JFrame {
                     .addComponent(StaffChoice))
                 .addGap(18, 18, 18)
                 .addGroup(RightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnLogIn, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Login, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCancelLogIn, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(12, 12, 12)
                 .addComponent(btnCreateAcc)
                 .addContainerGap())
         );
@@ -215,7 +217,7 @@ public class Login extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(139, Short.MAX_VALUE))
+                .addContainerGap(78, Short.MAX_VALUE))
         );
 
         pack();
@@ -224,68 +226,6 @@ public class Login extends javax.swing.JFrame {
     private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtEmailActionPerformed
-
-    private void btnLogInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogInActionPerformed
-        // TODO add your handling code here:
-        String Email, Password, query = null, passDb = null;
-        
-        
-        try{
-            Statement st = connect.createStatement();
-            
-            if("".equals(txtEmail.getText())){
-                JOptionPane.showMessageDialog(new JFrame(), "Email Address is require", "Error", JOptionPane.ERROR_MESSAGE);
-                
-            }
-            else if("".equals(txtPassword.getText())){
-                JOptionPane.showMessageDialog(new JFrame(), "Password is require", "Error", JOptionPane.ERROR_MESSAGE);
-                
-            }
-            else{
-                Email = txtEmail.getText();
-                Password = txtPassword.getText();
-                
-                
-                query = "SELECT * FROM appusers WHERE email = '" +Email+"'";
-                ResultSet rs = st.executeQuery(query);
-                int notFound = 0;
-                while(rs.next()){
-                    passDb = rs.getString("password");
-                    notFound = 1;
-                }
-                if(notFound == 1 && Password.equals(passDb)){
-                    
-                    if (AdminChoice.isSelected()) {
-                    Home HomeFrame = new Home();
-                    HomeFrame.setVisible(true);
-                    HomeFrame.pack();
-                    HomeFrame.setLocationRelativeTo(null);
-                    this.dispose();
-                }
-                else if (StaffChoice.isSelected()) {
-                    StaffFrame staffFrame = new StaffFrame();
-                    staffFrame.setVisible(true);
-                    staffFrame.pack();
-                    staffFrame.setLocationRelativeTo(null);
-                    this.dispose(); 
-                } else {
-                    JOptionPane.showMessageDialog(new JFrame(), "Please select a user type (Admin or Staff).", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                    
-                    
-            } 
-                else{
-                    JOptionPane.showMessageDialog(new JFrame(), "Incorrect email or password!", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-            
-            txtPassword.setText("");
-            
-            
-        } catch(Exception e){
-            System.out.println("Error!" + e.getMessage());
-        }
-    }//GEN-LAST:event_btnLogInActionPerformed
 
     private void btnCreateAccActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateAccActionPerformed
         // TODO add your handling code here:
@@ -309,7 +249,66 @@ public class Login extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_StaffChoiceActionPerformed
 
-    
+    private void LoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginActionPerformed
+        String Email, Password, query = null, passDb = null;
+
+        try{
+            Statement st = connect.createStatement();
+
+            if("".equals(txtEmail.getText())){
+                JOptionPane.showMessageDialog(new JFrame(), "Email Address is require", "Error", JOptionPane.ERROR_MESSAGE);
+
+            }
+            else if("".equals(txtPassword.getText())){
+                JOptionPane.showMessageDialog(new JFrame(), "Password is require", "Error", JOptionPane.ERROR_MESSAGE);
+
+            }
+            else{
+                Email = txtEmail.getText();
+                Password = txtPassword.getText();
+
+                query = "SELECT * FROM appusers WHERE email = '" +Email+"'";
+                ResultSet rs = st.executeQuery(query);
+                int notFound = 0;
+                while(rs.next()){
+                    passDb = rs.getString("password");
+                    notFound = 1;
+                }
+                if(notFound == 1 && Password.equals(passDb)){
+
+                    if (AdminChoice.isSelected()) {
+                        Home HomeFrame = new Home();
+                        HomeFrame.setVisible(true);
+                        HomeFrame.pack();
+                        HomeFrame.setLocationRelativeTo(null);
+                        this.dispose();
+                    }
+                    else if (StaffChoice.isSelected()) {
+                        StaffFrame staffFrame = new StaffFrame();
+                        staffFrame.setVisible(true);
+                        staffFrame.pack();
+                        staffFrame.setLocationRelativeTo(null);
+                        this.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(new JFrame(), "Please select a user type (Admin or Staff).", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+
+                }
+                else{
+                    JOptionPane.showMessageDialog(new JFrame(), "Incorrect email or password!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+
+            txtPassword.setText("");
+
+        } catch(Exception e){
+            System.out.println("Error!" + e.getMessage());
+        }
+    }//GEN-LAST:event_LoginActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -345,11 +344,11 @@ public class Login extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton AdminChoice;
     private javax.swing.JPanel Left;
+    private javax.swing.JButton Login;
     private javax.swing.JPanel Right;
     private javax.swing.JRadioButton StaffChoice;
     private javax.swing.JButton btnCancelLogIn;
     private javax.swing.JButton btnCreateAcc;
-    private javax.swing.JButton btnLogIn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
